@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+    <title>Diabetes Prediction</title>
+    <style>
+      body{
+        background-image: url("static/bg1.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      form {
+        border-radius: 12px;
+        max-width: 460px;
+        margin: 10px auto;
+        padding: 10px;
+      }
+      .form-back{
+        background-color: rgba(255, 255, 255, 0.657);
+        backdrop-filter: blur(10px); 
+      }
+      .inputLabel{
+        font-size: 20px;
+        font-weight: 600;
+        color: #ab47bc !important;
+      }
+      .predict{
+        text-align: center;
+        margin-top: 20px;
+      }
+      .predicted{
+        display: inline;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        width: fit-content;
+        pointer-events: none;
+      }
+      .brand {
+        background: #ab47bc !important;
+      }
+
+      .brand-text {
+        color: #ab47bc !important;
+      }
+      .title{
+        text-align: center;
+        margin-top: 10px;
+      }
+      .titleInner{
+        display: inline;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.657);
+        backdrop-filter: blur(10px);
+        font-size: 35px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="title">
+      <div class="titleInner brand-text">Diabetes Prediction</div>
+    </div>
+    <form action="/predict" method="POST" class="form-back purple-text">
+      <div class="row">
+        <div class="input-field col s6">
+          <label class="inputLabel">Preganancies</label>
+          <input placeholder="0" type="text" name="preganancies" value="">
+        </div>
+        <div class="input-field col s6">
+          <label class="inputLabel">Glucose</label>
+          <input placeholder="0" type="text" name="glucose" value="">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s6">
+          <label class="inputLabel">Blood Pressure</label>
+          <input placeholder="0" type="text" name="bloodpress" value="">
+        </div>
+        <div class="input-field col s6">
+          <label class="inputLabel">Skin Thickness</label>
+          <input placeholder="0" type="text" name="skinthic" value="">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s6">
+          <label class="inputLabel">Insulin</label>
+          <input placeholder="0" type="text" name="insulin" value="">
+        </div>
+        <div class="input-field col s6">
+          <label class="inputLabel">BMI</label>
+          <input placeholder="0" type="text" name="bmi" value="">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s6">
+          <label class="inputLabel">Diabetes Pedigree Functoin</label>
+          <input placeholder="0" type="text" name="dpf" value="">
+        </div>
+        <div class="input-field col s6">
+          <label class="inputLabel">Age</label>
+          <input placeholder="0" type="text" name="age" value="">
+        </div>
+      </div>
+  
+      <div class="center">
+        <input type="submit" name="submit" value="predict" class="btn brand z-depth-0">
+      </div>
+    </form>
+    <div class="predict"">
+      <div class="predicted btn brand z-depth-0">{{ prediction }}</div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  </body>
+</html>
