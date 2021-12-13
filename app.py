@@ -1,45 +1,44 @@
-from typing import Tuple
-from flask import Flask,render_template
-import pickle
-from flask.globals import request
 import numpy as np
+from flask import Flask, request, jsonify, render_template
+import pickle
+import joblib
+
 app = Flask(__name__)
+model = pickle.load(open('model.pkl', 'rb'))
+scaler = joblib.load('model_scaler.pkl') 
+#scaler = pickle.load(open(scalerfile, 'rb'))
 
-def ValuePredictor(to_predict_list):
-    to_predict = np.array(to_predict_list).reshape(1, 8)
-    loaded_model = pickle.load(open("model.pkl", "rb"))
-    result = loaded_model.predict(to_predict)
-    return result[0]
-prediction="Kindly fill the above form!"
 @app.route('/')
-def hello_world():
-    return render_template("home.html",prediction = prediction)
+def home():
+    return render_template('home.html')
 
-@app.route('/predict',methods=['GET', 'POST'])
+@app.route('/predict',methods=['POST'])
 def predict():
-    if request.method == 'POST':
-        to_predict_list = request.form.to_dict()
-        to_predict_list = list(to_predict_list.values())
-        to_predict_list = to_predict_list[0:8]
-        print(to_predict_list)
-        #to_predict_list = list(map(int, to_predict_list))
-        to_predict_list[0]=int(to_predict_list[0])
-        to_predict_list[1]=int(to_predict_list[1])
-        to_predict_list[2]=int(to_predict_list[2])
-        to_predict_list[3]=int(to_predict_list[3])
-        to_predict_list[4]=int(to_predict_list[4])
-        to_predict_list[5]=float(to_predict_list[5])
-        to_predict_list[6]=float(to_predict_list[6])
-        to_predict_list[7]=int(to_predict_list[7])
-        print(to_predict_list)
-        result = ValuePredictor(to_predict_list)       
-        if result== 0:
-            prediction ="Not Diabetic"
-            #print("not Diabetic")
-        else:
-            prediction ="Diabetic"
-            #print("Diabetic")          
-        return render_template("home.html", prediction = prediction)
+    '''
+    For rendering results on HTML GUI
+    '''
+    int_features = [float(x) for x in request.form.values()]
+    features = [np.array(int_features)]
+    final_features = scaler.transform(features)
+    prediction = model.predict(final_features)
+
+    output = prediction
+    
+    if output == 1:
+        return render_template('home.html', prediction='You Have Diabetes')
+    else:
+        return render_template('home.html', prediction='You Dont Have Diabetes')
+
+@app.route('/predict_api',methods=['POST'])
+def predict_api():
+    '''
+    For direct API calls trought request
+    '''
+    data = request.get_json(force=True)
+    prediction = model.predict([np.array(list(data.values()))])
+
+    output = prediction[0]
+    return jsonify(output)
 
 if __name__ == "__main__":
     app.run()
